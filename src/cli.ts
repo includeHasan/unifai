@@ -29,7 +29,7 @@ interface Options {
 }
 
 program
-    .name('agent-skills')
+    .name('openskill-ai')
     .description('Install skills onto AI coding agents from git repositories')
     .version(version)
     .argument('<source>', 'Git repo URL, GitHub shorthand (owner/repo), or direct path to skill')
@@ -45,12 +45,12 @@ program
                 console.log(chalk.bgRed.white.bold(' ERROR ') + ' ' + chalk.red('Missing required argument: source'));
                 console.log();
                 console.log(chalk.dim('  Usage:'));
-                console.log(`    ${chalk.cyan('npx agent-skills')} ${chalk.yellow('<source>')} ${chalk.dim('[options]')}`);
+                console.log(`    ${chalk.cyan('npx openskill-ai')} ${chalk.yellow('<source>')} ${chalk.dim('[options]')}`);
                 console.log();
                 console.log(chalk.dim('  Example:'));
-                console.log(`    ${chalk.cyan('npx agent-skills')} ${chalk.yellow('vercel-labs/agent-skills')}`);
+                console.log(`    ${chalk.cyan('npx openskill-ai')} ${chalk.yellow('vercel-labs/agent-skills')}`);
                 console.log();
-                console.log(chalk.dim('  Run') + ` ${chalk.cyan('npx agent-skills --help')} ` + chalk.dim('for more information.'));
+                console.log(chalk.dim('  Run') + ` ${chalk.cyan('npx openskill-ai --help')} ` + chalk.dim('for more information.'));
                 console.log();
             } else {
                 write(str);
@@ -81,7 +81,7 @@ program.parse();
 
 async function main(source: string, options: Options) {
     console.log();
-    p.intro(chalk.bgCyan.black(' agent-skills '));
+    p.intro(chalk.bgCyan.black(' openskill-ai '));
 
     let tempDir: string | null = null;
 
