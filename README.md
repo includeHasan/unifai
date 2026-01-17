@@ -1,107 +1,230 @@
-# Agent Skills
+# agent-skills
 
-Install AI agent skills for any project. Works with **Claude Code**, **Cursor**, **OpenCode**, and other AI agents.
+> Install AI agent skills from any Git repository
+
+A powerful CLI tool to install and manage AI coding agent skills from GitHub, GitLab, or any Git repository. Supports 15+ popular AI agents with auto-detection and interactive prompts.
+
+## Features
+
+✨ **Remote Repository Support** - Install skills from any Git repository  
+🤖 **15+ AI Agents** - Antigravity, Cursor, Claude Code, OpenCode, GitHub Copilot, and more  
+💬 **Interactive CLI** - Beautiful prompts with multi-select workflows  
+🔍 **Auto-Detection** - Automatically finds installed agents on your system  
+🌐 **Global/Project Installs** - Choose your installation scope  
+🔒 **Security** - Path sanitization and traversal protection  
+
+## Quick Start
+
+```bash
+# Install skills from a repository
+npx agent-skills vercel-labs/agent-skills
+
+# List available skills first
+npx agent-skills vercel-labs/agent-skills --list
+
+# Install specific skill to Antigravity
+npx agent-skills vercel-labs/agent-skills \
+  --skill frontend-design \
+  --agent antigravity
+```
 
 ## Installation
 
-```bash
-# Install skills directly (recommended)
-npx agent-skills install flutter react
+### As a CLI Tool (Recommended)
 
-# Or install globally
+Use with `npx` without installing:
+```bash
+npx agent-skills <source>
+```
+
+Or install globally:
+```bash
 npm install -g agent-skills
-agent-skills install flutter
+agent-skills <source>
+```
+
+### As a Library
+
+```bash
+npm install agent-skills
+```
+
+```javascript
+import { installSkillForAgent, discoverSkills } from 'agent-skills';
 ```
 
 ## Usage
 
-### Install Skills
+### Source Formats
+
+The CLI accepts multiple source formats:
 
 ```bash
-# Install one skill
-npx agent-skills install flutter
+# GitHub shorthand
+agent-skills vercel-labs/agent-skills
 
-# Install multiple skills
-npx agent-skills install flutter react clean-code
+# GitHub URL
+agent-skills https://github.com/owner/repo
 
-# Short form
-npx agent-skills i flutter react
+# GitHub tree path (specific directory)
+agent-skills https://github.com/owner/repo/tree/main/skills/frontend
+
+# GitLab
+agent-skills https://gitlab.com/owner/repo
+
+# Direct Git URL
+agent-skills git@github.com:owner/repo.git
 ```
 
-### List Skills
+### CLI Options
 
+| Option | Description |
+|--------|-------------|
+| `-g, --global` | Install globally (user-level) instead of project-level |
+| `-a, --agent <agents...>` | Target specific agents |
+| `-s, --skill <skills...>` | Select specific skills to install |
+| `-l, --list` | List available skills without installing |
+| `-y, --yes` | Skip all confirmation prompts |
+| `-h, --help` | Show help |
+
+### Examples
+
+**Interactive Installation** (recommended for first-time users):
 ```bash
-npx agent-skills list
-
-# Output:
-# Available Skills:
-#   ✓ flutter       Flutter/Dart best practices (installed)
-#   ✓ react         React/Next.js patterns (installed)
-#     clean-code    Universal clean code principles
-#     typescript    TypeScript patterns
+agent-skills vercel-labs/agent-skills
 ```
 
-### Remove Skills
-
+**List Skills Before Installing:**
 ```bash
-npx agent-skills remove flutter
-
-# Remove multiple
-npx agent-skills rm flutter react
+agent-skills vercel-labs/agent-skills --list
 ```
 
-### Initialize
-
+**Install Specific Skill:**
 ```bash
-# Create .agents folder without installing skills
-npx agent-skills init
+agent-skills vercel-labs/agent-skills --skill frontend-design
 ```
 
-## Result
-
-After installation, your project will have:
-
-```
-.agents/
-├── README.md              # Auto-generated index
-├── flutter-skills/
-│   ├── skills.md          # Main skill file
-│   └── references/        # Detailed documentation
-└── react-skills/
-    ├── skills.md
-    └── references/
+**Install to Multiple Agents:**
+```bash
+agent-skills vercel-labs/agent-skills \
+  --skill frontend-design \
+  --agent antigravity \
+  --agent cursor \
+  --agent claude-code
 ```
 
-## Available Skills
+**Global Installation (Non-Interactive):**
+```bash
+agent-skills vercel-labs/agent-skills \
+  --skill frontend-design \
+  --global \
+  --yes
+```
 
-| Skill | Description |
-|-------|-------------|
-| `flutter` | Flutter/Dart best practices and patterns |
-| `react` | React/Next.js performance optimization |
-| `clean-code` | Universal clean code principles |
-| `typescript` | TypeScript type patterns |
-| `api-design` | REST and GraphQL API design |
-| `git` | Git workflows and conventions |
-| `testing` | Testing strategies and patterns |
-| `springboot` | Spring Boot and Java patterns |
-| `node` | Node.js/Express patterns |
-| `python` | Python best practices |
+**List All Supported Agents:**
+```bash
+agent-skills list-agents
+```
 
-## How It Works
+## Supported AI Agents
 
-1. Skills are installed in `.agents/` folder in your project root
-2. AI agents automatically read these files for context
-3. Each skill contains `skills.md` with patterns and `references/` with details
-4. Auto-generated `README.md` indexes all installed skills
+The tool supports 15 AI coding agents with auto-detection:
 
-## For AI Agents
+- **Antigravity** - `.agent/skills` (project) or `~/.gemini/antigravity/skills` (global)
+- **Cursor** - `.cursor/skills` or `~/.cursor/skills`
+- **Claude Code** - `.claude/skills` or `~/.claude/skills`
+- **OpenCode** - `.opencode/skill` or `~/.config/opencode/skill`
+- **GitHub Copilot** - `.github/skills` or `~/.copilot/skills`
+- **Codex** - `.codex/skills` or `~/.codex/skills`
+- **Windsurf** - `.windsurf/skills` or `~/.codeium/windsurf/skills`
+- **Roo Code** - `.roo/skills` or `~/.roo/skills`
+- **Goose** - `.goose/skills` or `~/.config/goose/skills`
+- **Gemini CLI** - `.gemini/skills` or `~/.gemini/skills`
+- **Amp** - `.agents/skills` or `~/.config/agents/skills`
+- **Kilo Code** - `.kilocode/skills` or `~/.kilocode/skills`
+- **Clawdbot** - `skills/` or `~/.clawdbot/skills`
+- **Droid** - `.factory/skills` or `~/.factory/skills`
 
-The `.agents/README.md` serves as an index. Read `skills.md` in each subfolder for specific patterns and guidelines.
+## Creating Skills
+
+Skills are defined using `SKILL.md` files with YAML frontmatter:
+
+```markdown
+---
+name: my-skill
+description: What this skill does and when to use it
+---
+
+# My Skill
+
+Instructions for the AI agent to follow when this skill is activated.
+
+## When to Use
+
+Describe scenarios where this skill should be applied.
+
+## Guidelines
+
+1. First guideline
+2. Second guideline
+```
+
+### Skill Discovery
+
+The CLI searches for skills in these locations:
+- Root directory (if it contains `SKILL.md`)
+- `skills/`, `skills/.curated/`, `skills/.experimental/`
+- `.agent/skills/`, `.claude/skills/`, `.cursor/skills/`
+- All other agent-specific directories
+- Recursive search as fallback (max depth 5)
+
+## Security
+
+The tool implements several security measures:
+
+- **Path Sanitization** - Removes dangerous characters from skill names
+- **Traversal Protection** - Validates all paths to prevent directory traversal
+- **Safe Cloning** - Uses temporary directories for Git operations
+- **File Exclusions** - Skips `README.md`, `metadata.json`, and files starting with `_`
+
+## Programmatic API
+
+```javascript
+import { 
+  installSkillForAgent,
+  discoverSkills,
+  detectInstalledAgents,
+  parseSource,
+  cloneRepo
+} from 'agent-skills';
+
+// Clone and discover skills
+const parsed = parseSource('vercel-labs/agent-skills');
+const tempDir = await cloneRepo(parsed.url);
+const skills = await discoverSkills(tempDir);
+
+// Detect installed agents
+const agents = await detectInstalledAgents();
+
+// Install skill
+await installSkillForAgent(skills[0], 'antigravity', { global: false });
+```
+
+## Requirements
+
+- Node.js >= 18.0.0
+- Git installed on your system
 
 ## Contributing
 
-Want to add a new skill? See our [contribution guide](CONTRIBUTING.md).
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-MIT
+MIT © Agent Skills Community
+
+## Links
+
+- [GitHub Repository](https://github.com/yourusername/agent-skills)
+- [Report Issues](https://github.com/yourusername/agent-skills/issues)
+- [npm Package](https://www.npmjs.com/package/agent-skills)

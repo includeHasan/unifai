@@ -1,7 +1,7 @@
 {
   "name": "agent-skills",
   "version": "1.0.0",
-  "description": "Install AI agent skills for any project. Works with Claude Code, Cursor, OpenCode, and other AI agents.",
+  "description": "Install AI agent skills from Git repositories. Supports 15+ agents including Antigravity, Cursor, Claude Code, OpenCode, GitHub Copilot, and more.",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,26 +10,36 @@
   },
   "files": [
     "dist",
-    "skills"
+    "skills",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsup src/cli.ts src/index.ts --format esm --dts --clean",
     "watch": "tsup src/cli.ts src/index.ts --format esm --dts --watch",
     "dev": "tsx src/cli.ts",
-    "test": "node dist/cli.js list",
+    "test": "node dist/cli.js list-agents",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
     "ai",
     "agent",
     "skills",
-    "claude",
+    "claude-code",
     "cursor",
     "opencode",
     "antigravity",
+    "github-copilot",
+    "copilot",
+    "codex",
+    "windsurf",
+    "roo-code",
     "assistant",
     "llm",
-    "best-practices"
+    "coding-assistant",
+    "best-practices",
+    "git",
+    "cli"
   ],
   "author": "Agent Skills Community",
   "license": "MIT",
@@ -37,6 +47,10 @@
     "type": "git",
     "url": "https://github.com/yourusername/agent-skills.git"
   },
+  "bugs": {
+    "url": "https://github.com/yourusername/agent-skills/issues"
+  },
+  "homepage": "https://github.com/yourusername/agent-skills#readme",
   "dependencies": {
     "@clack/prompts": "^0.9.1",
     "chalk": "^5.4.1",
