@@ -1,12 +1,12 @@
 {
-  "name": "agent-skills",
-  "version": "1.0.0",
+  "name": "openskill-ai",
+  "version": "1.0.1",
   "description": "Install AI agent skills from Git repositories. Supports 15+ agents including Antigravity, Cursor, Claude Code, OpenCode, GitHub Copilot, and more.",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "agent-skills": "./dist/cli.js"
+    "openskill-ai": "./dist/cli.js"
   },
   "files": [
     "dist",

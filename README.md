@@ -1,4 +1,4 @@
-# agent-skills
+# openskill-ai
 
 > Install AI agent skills from any Git repository
 
@@ -17,13 +17,13 @@ A powerful CLI tool to install and manage AI coding agent skills from GitHub, Gi
 
 ```bash
 # Install skills from a repository
-npx agent-skills vercel-labs/agent-skills
+npx openskill-ai vercel-labs/agent-skills
 
 # List available skills first
-npx agent-skills vercel-labs/agent-skills --list
+npx openskill-ai vercel-labs/agent-skills --list
 
 # Install specific skill to Antigravity
-npx agent-skills vercel-labs/agent-skills \
+npx openskill-ai vercel-labs/agent-skills \
   --skill frontend-design \
   --agent antigravity
 ```
@@ -34,23 +34,23 @@ npx agent-skills vercel-labs/agent-skills \
 
 Use with `npx` without installing:
 ```bash
-npx agent-skills <source>
+npx openskill-ai <source>
 ```
 
 Or install globally:
 ```bash
-npm install -g agent-skills
-agent-skills <source>
+npm install -g openskill-ai
+openskill-ai <source>
 ```
 
 ### As a Library
 
 ```bash
-npm install agent-skills
+npm install openskill-ai
 ```
 
 ```javascript
-import { installSkillForAgent, discoverSkills } from 'agent-skills';
+import { installSkillForAgent, discoverSkills } from 'openskill-ai';
 ```
 
 ## Usage
@@ -61,19 +61,19 @@ The CLI accepts multiple source formats:
 
 ```bash
 # GitHub shorthand
-agent-skills vercel-labs/agent-skills
+openskill-ai vercel-labs/agent-skills
 
 # GitHub URL
-agent-skills https://github.com/owner/repo
+openskill-ai https://github.com/owner/repo
 
 # GitHub tree path (specific directory)
-agent-skills https://github.com/owner/repo/tree/main/skills/frontend
+openskill-ai https://github.com/owner/repo/tree/main/skills/frontend
 
 # GitLab
-agent-skills https://gitlab.com/owner/repo
+openskill-ai https://gitlab.com/owner/repo
 
 # Direct Git URL
-agent-skills git@github.com:owner/repo.git
+openskill-ai git@github.com:owner/repo.git
 ```
 
 ### CLI Options
@@ -91,22 +91,22 @@ agent-skills git@github.com:owner/repo.git
 
 **Interactive Installation** (recommended for first-time users):
 ```bash
-agent-skills vercel-labs/agent-skills
+openskill-ai vercel-labs/agent-skills
 ```
 
 **List Skills Before Installing:**
 ```bash
-agent-skills vercel-labs/agent-skills --list
+openskill-ai vercel-labs/agent-skills --list
 ```
 
 **Install Specific Skill:**
 ```bash
-agent-skills vercel-labs/agent-skills --skill frontend-design
+openskill-ai vercel-labs/agent-skills --skill frontend-design
 ```
 
 **Install to Multiple Agents:**
 ```bash
-agent-skills vercel-labs/agent-skills \
+openskill-ai vercel-labs/agent-skills \
   --skill frontend-design \
   --agent antigravity \
   --agent cursor \
@@ -115,7 +115,7 @@ agent-skills vercel-labs/agent-skills \
 
 **Global Installation (Non-Interactive):**
 ```bash
-agent-skills vercel-labs/agent-skills \
+openskill-ai vercel-labs/agent-skills \
   --skill frontend-design \
   --global \
   --yes
@@ -123,7 +123,7 @@ agent-skills vercel-labs/agent-skills \
 
 **List All Supported Agents:**
 ```bash
-agent-skills list-agents
+openskill-ai list-agents
 ```
 
 ## Supported AI Agents
@@ -196,7 +196,7 @@ import {
   detectInstalledAgents,
   parseSource,
   cloneRepo
-} from 'agent-skills';
+} from 'openskill-ai';
 
 // Clone and discover skills
 const parsed = parseSource('vercel-labs/agent-skills');
@@ -227,4 +227,4 @@ MIT © Agent Skills Community
 
 - [GitHub Repository](https://github.com/yourusername/agent-skills)
 - [Report Issues](https://github.com/yourusername/agent-skills/issues)
-- [npm Package](https://www.npmjs.com/package/agent-skills)
+- [npm Package](https://www.npmjs.com/package/openskill-ai)
