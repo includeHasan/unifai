@@ -1,0 +1,42 @@
+{
+  "name": "agent-skills",
+  "version": "1.0.0",
+  "description": "Install AI agent skills for any project. Works with Claude Code, Cursor, OpenCode, and other AI agents.",
+  "main": "src/index.js",
+  "bin": {
+    "agent-skills": "./bin/cli.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "skills"
+  ],
+  "scripts": {
+    "test": "node bin/cli.js list"
+  },
+  "keywords": [
+    "ai",
+    "agent",
+    "skills",
+    "claude",
+    "cursor",
+    "opencode",
+    "assistant",
+    "llm",
+    "best-practices"
+  ],
+  "author": "Agent Skills Community",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/agent-skills.git"
+  },
+  "dependencies": {
+    "commander": "^12.0.0",
+    "chalk": "^4.1.2",
+    "fs-extra": "^11.2.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
