@@ -2,20 +2,21 @@
   "name": "agent-skills",
   "version": "1.0.0",
   "description": "Install AI agent skills for any project. Works with Claude Code, Cursor, OpenCode, and other AI agents.",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "agent-skills": "./bin/cli.js"
+    "agent-skills": "./dist/cli.js"
   },
   "files": [
-    "bin",
     "dist",
     "skills"
   ],
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc --watch",
-    "test": "node bin/cli.js list",
+    "build": "tsup src/cli.ts src/index.ts --format esm --dts --clean",
+    "watch": "tsup src/cli.ts src/index.ts --format esm --dts --watch",
+    "dev": "tsx src/cli.ts",
+    "test": "node dist/cli.js list",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
@@ -25,6 +26,7 @@
     "claude",
     "cursor",
     "opencode",
+    "antigravity",
     "assistant",
     "llm",
     "best-practices"
@@ -36,16 +38,19 @@
     "url": "https://github.com/yourusername/agent-skills.git"
   },
   "dependencies": {
-    "commander": "^12.0.0",
-    "chalk": "^4.1.2",
-    "fs-extra": "^11.2.0"
+    "@clack/prompts": "^0.9.1",
+    "chalk": "^5.4.1",
+    "commander": "^13.1.0",
+    "gray-matter": "^4.0.3",
+    "simple-git": "^3.27.0"
   },
   "devDependencies": {
-    "@types/fs-extra": "^11.0.4",
-    "@types/node": "^20.11.0",
-    "typescript": "^5.3.3"
+    "@types/node": "^22.10.0",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   }
 }

@@ -1,20 +1,20 @@
-import * as fs from 'fs-extra';
+import { writeFile } from 'fs/promises';
 import * as path from 'path';
-import { getAgentsDir, getInstalledSkills } from './fs-helpers';
-import { registry } from '../registry';
+import { getAgentsDir, getInstalledSkills } from './fs-helpers.js';
+import { registry } from '../registry.js';
 
 /**
  * Generate the README.md content for .agents folder
  */
 export function generateReadmeContent(installedFolders: string[]): string {
   const date = new Date().toISOString().split('T')[0];
-  
+
   // Map folder names back to skill info
   const skills = installedFolders.map(folderName => {
     const skillEntry = Object.entries(registry).find(
       ([_, info]) => info.folderName === folderName
     );
-    
+
     if (skillEntry) {
       const [id, info] = skillEntry;
       return {
@@ -23,7 +23,7 @@ export function generateReadmeContent(installedFolders: string[]): string {
         description: info.description
       };
     }
-    
+
     // Unknown skill (manually added)
     return {
       folderName,
@@ -55,7 +55,7 @@ npx agent-skills install flutter react
     content += `| Skill | Description |
 |-------|-------------|
 `;
-    
+
     for (const skill of skills) {
       content += `| [${skill.id}](./${skill.folderName}/skills.md) | ${skill.description} |
 `;
@@ -78,15 +78,15 @@ _Managed by [agent-skills](https://www.npmjs.com/package/agent-skills)_
 export async function updateReadme(targetDir: string = '.'): Promise<string> {
   const agentsDir = getAgentsDir(targetDir);
   const readmePath = path.join(agentsDir, 'README.md');
-  
+
   // Get installed skills
   const installedFolders = await getInstalledSkills(targetDir);
-  
+
   // Generate content
   const content = generateReadmeContent(installedFolders);
-  
+
   // Write file
-  await fs.writeFile(readmePath, content, 'utf8');
-  
+  await writeFile(readmePath, content, 'utf8');
+
   return readmePath;
 }
