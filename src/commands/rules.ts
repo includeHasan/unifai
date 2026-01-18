@@ -465,7 +465,6 @@ async function rulesSync(options: RulesOptions): Promise<void> {
   const selectedIDEs = await p.multiselect({
     message: 'Sync rules to which IDEs?',
     options: ideChoices,
-    initialValues: detectedIDEs.map(ide => ide.id),
     required: true,
   });
 
