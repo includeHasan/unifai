@@ -8,7 +8,7 @@
 
 import { $ } from "bun";
 
-console.log("🔨 Building openskill-ai with Bun...\n");
+console.log("🔨 Building unifai with Bun...\n");
 
 // Build CLI entry point
 const cliBuild = await Bun.build({

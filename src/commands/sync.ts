@@ -157,8 +157,8 @@ export async function syncCommand(options: SyncCommandOptions): Promise<void> {
 
     if (!agentConfig && mcpServers.length === 0 && !hasRules) {
         p.log.warn('No configurations found to sync');
-        p.log.info('Run `openskill-ai agent init` to create agent config');
-        p.log.info('Run `openskill-ai mcp init` to create MCP config');
+        p.log.info('Run `unifai agent init` to create agent config');
+        p.log.info('Run `unifai mcp init` to create MCP config');
         p.outro('');
         return;
     }

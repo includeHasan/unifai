@@ -256,7 +256,7 @@ export async function agentShow(options: AgentCommandOptions): Promise<void> {
 
     if (!found) {
         p.log.warn('No agent configuration files found');
-        p.log.info('Run `openskill-ai agent init` to create one');
+        p.log.info('Run `unifai agent init` to create one');
     }
 
     console.log();
@@ -297,7 +297,7 @@ export async function agentSync(options: AgentCommandOptions): Promise<void> {
 
     if (!config) {
         spinner.stop(chalk.yellow('No agent configuration found'));
-        p.log.info('Run `openskill-ai agent init` to create one');
+        p.log.info('Run `unifai agent init` to create one');
         p.outro('');
         return;
     }

@@ -1,12 +1,12 @@
 {
-  "name": "openskill-ai",
-  "version": "2.0.1",
+  "name": "unifai",
+  "version": "2.0.2",
   "description": "Install AI agent skills from Git repositories. Supports 15+ agents including Antigravity, Cursor, Claude Code, OpenCode, GitHub Copilot, and more.",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "openskill-ai": "./dist/cli.js"
+    "unifai": "./dist/cli.js"
   },
   "files": [
     "dist",
@@ -16,11 +16,11 @@
   ],
   "scripts": {
     "build": "bun run build.ts",
-    "build:standalone": "bun build src/cli.ts --compile --outfile dist/openskill-ai",
+    "build:standalone": "bun build src/cli.ts --compile --outfile dist/unifai",
     "build:standalone:all": "bun run build:standalone:windows && bun run build:standalone:linux && bun run build:standalone:macos",
-    "build:standalone:windows": "bun build src/cli.ts --compile --target=bun-windows-x64 --outfile dist/bin/openskill-ai-windows-x64.exe",
-    "build:standalone:linux": "bun build src/cli.ts --compile --target=bun-linux-x64 --outfile dist/bin/openskill-ai-linux-x64",
-    "build:standalone:macos": "bun build src/cli.ts --compile --target=bun-darwin-x64 --outfile dist/bin/openskill-ai-darwin-x64",
+    "build:standalone:windows": "bun build src/cli.ts --compile --target=bun-windows-x64 --outfile dist/bin/unifai-windows-x64.exe",
+    "build:standalone:linux": "bun build src/cli.ts --compile --target=bun-linux-x64 --outfile dist/bin/unifai-linux-x64",
+    "build:standalone:macos": "bun build src/cli.ts --compile --target=bun-darwin-x64 --outfile dist/bin/unifai-darwin-x64",
     "dev": "bun src/cli.ts",
     "dev:watch": "bun --watch src/cli.ts",
     "test": "bun run dist/cli.js list-agents",
@@ -53,12 +53,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/agent-skills.git"
+    "url": "https://github.com/includeHasan/unifai.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/agent-skills/issues"
+    "url": "https://github.com/includeHasan/unifai/issues"
   },
-  "homepage": "https://github.com/yourusername/agent-skills#readme",
+  "homepage": "https://github.com/includeHasan/unifai#readme",
   "dependencies": {
     "@clack/prompts": "^0.9.1",
     "chalk": "^5.4.1",

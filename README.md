@@ -1,4 +1,4 @@
-# openskill-ai
+# unifai
 
 > Universal AI IDE Configuration & Skill Manager
 
@@ -17,10 +17,10 @@ A powerful CLI tool to unify your AI coding agent experience. Standardize instru
 
 ```bash
 # Install globally
-npm install -g openskill-ai
+npm install -g unifai
 
 # Or use with npx
-npx openskill-ai <command>
+npx unifai <command>
 ```
 
 ## 📋 Quick Start
@@ -30,31 +30,31 @@ Moving from Claude Code to Antigravity? Or Cursor to Claude? Just sync. The tool
 
 ```bash
 # Automatically detects .claude, .cursor, and .agent configs and applies them to all detected IDEs
-openskill-ai sync
+unifai sync
 ```
 
 ### 2. Manage MCP Servers
 Add local or remote tools (via HTTP/SSE) to all your AI assistants:
 ```bash
 # Choose between Command (stdio) or HTTP server
-openskill-ai mcp add
+unifai mcp add
 
 # Sync your MCP setup to all IDE settings (settings.json, etc.)
-openskill-ai mcp sync
+unifai mcp sync
 ```
 
 ### 3. Agent Instructions
 Initialize a standardized instruction set for your project with built-in best practices:
 ```bash
 # Creates AGENTS.md, CLAUDE.md, etc.
-openskill-ai agent init
+unifai agent init
 ```
 
 ### 4. Install Agent Skills
 Install specialized behaviors (like "frontend-expert" or "testing-pro") from any Git repo:
 ```bash
 # Install skills from a GitHub repository
-openskill-ai includeHasan/agent-skills
+unifai includeHasan/agent-skills
 ```
 
 ## 🔄 Universal Migration Paths
@@ -90,7 +90,7 @@ The `sync` command "scavenges" configurations from these locations and migrates 
 
 ## 🏗️ Folder Structure
 
-Universal AI IDEs follow these conventions through `openskill-ai`:
+Universal AI IDEs follow these conventions through `unifai`:
 
 - **Workspace Rules**: `.agent/rules/` (Unified Markdown files)
 - **Agent Skills**: `.agent/skills/`
@@ -103,4 +103,4 @@ MIT © Agent Skills Community
 ## 🔗 Links
 
 - [GitHub Repository](https://github.com/includeHasan/agent-skills)
-- [npm Package](https://www.npmjs.com/package/openskill-ai)
+- [npm Package](https://www.npmjs.com/package/unifai)

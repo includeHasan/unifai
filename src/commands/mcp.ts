@@ -65,7 +65,7 @@ export async function mcpInit(options: MCPCommandOptions): Promise<void> {
     await writeFile(configPath, JSON.stringify(config, null, 2));
 
     p.log.success(`Created ${chalk.cyan(configPath)}`);
-    p.log.info('Use `openskill-ai mcp add` to add MCP servers');
+    p.log.info('Use `unifai mcp add` to add MCP servers');
 
     console.log();
     p.outro(chalk.green('MCP configuration initialized!'));
@@ -305,7 +305,7 @@ export async function mcpList(options: MCPCommandOptions): Promise<void> {
 
     if (!existsSync(configPath)) {
         p.log.warn('No MCP configuration found');
-        p.log.info('Run `openskill-ai mcp init` to create one');
+        p.log.info('Run `unifai mcp init` to create one');
         p.outro('');
         return;
     }
@@ -318,7 +318,7 @@ export async function mcpList(options: MCPCommandOptions): Promise<void> {
 
         if (servers.length === 0) {
             p.log.info('No MCP servers configured');
-            p.log.info('Run `openskill-ai mcp add` to add servers');
+            p.log.info('Run `unifai mcp add` to add servers');
         } else {
             console.log();
             p.log.step(chalk.bold(`Configured MCP Servers (${servers.length})`));
@@ -379,7 +379,7 @@ export async function mcpSync(options: MCPCommandOptions): Promise<void> {
 
     if (!existsSync(configPath)) {
         p.log.warn('No MCP configuration found');
-        p.log.info('Run `openskill-ai mcp init` to create one');
+        p.log.info('Run `unifai mcp init` to create one');
         p.outro('');
         return;
     }
