@@ -2,12 +2,13 @@
 
 > Universal AI IDE Configuration & Sync Tool
 
-A powerful CLI tool to unify your AI coding agent experience. Standardize instructions, manage MCP servers, and synchronize rules across Claude Code, Antigravity, Cursor, OpenCode, and GitHub Copilot.
+A powerful CLI tool to unify your AI coding agent experience. Standardize instructions, manage MCP servers, skills, and synchronize rules across Claude Code, Antigravity, Cursor, OpenCode, and GitHub Copilot.
 
 ## 🚀 Key Features
 
 - 🔄 **Universal Sync & Migration** - Synchronize and migrate agent instructions, rules, and MCP configs across all IDEs at once.
 - 🛠️ **MCP Management** - Add, list, and sync Model Context Protocol servers (Standard Stdio & HTTP/SSE).
+- 📁 **Skills Management** - Manage skills centrally (e.g., `~/.gemini/skills`) or per project (e.g., `.agent/skills`).
 - 🤖 **Standardized Agents** - Project-level `AGENTS.md` and `CLAUDE.md` with professional prompt templates.
 - 📐 **Cross-IDE Scavenging** - Automatically discover rules from `.claude/`, `.cursor/`, or `.agent/` and unify them.
 - 🌐 **Global & Workspace Rules** - Manage rules centrally (e.g., `~/.gemini/GEMINI.md`) or per project.
