@@ -153,6 +153,61 @@ mcpCmd
         await mcpSync(options);
     });
 
+// Add rules command group
+const rulesCmd = program
+    .command('rules')
+    .description('Manage AI coding rules across IDEs');
+
+rulesCmd
+    .command('init')
+    .description('Initialize rules configuration')
+    .action(async () => {
+        const { rulesCommand } = await import('./commands/rules.js');
+        await rulesCommand('init', [], {});
+    });
+
+rulesCmd
+    .command('add [template]')
+    .description('Add rules (from template or interactively)')
+    .action(async (template: string | undefined) => {
+        const { rulesCommand } = await import('./commands/rules.js');
+        await rulesCommand('add', template ? [template] : [], {});
+    });
+
+rulesCmd
+    .command('list')
+    .description('List all configured rules')
+    .action(async () => {
+        const { rulesCommand } = await import('./commands/rules.js');
+        await rulesCommand('list', [], {});
+    });
+
+rulesCmd
+    .command('remove')
+    .description('Remove rules')
+    .action(async () => {
+        const { rulesCommand } = await import('./commands/rules.js');
+        await rulesCommand('remove', [], {});
+    });
+
+rulesCmd
+    .command('sync')
+    .description('Sync rules to all detected IDEs')
+    .option('-g, --global', 'Sync to global configuration')
+    .option('--ide <ide>', 'Sync to specific IDE only')
+    .action(async (options) => {
+        const { rulesCommand } = await import('./commands/rules.js');
+        await rulesCommand('sync', [], options);
+    });
+
+rulesCmd
+    .command('templates')
+    .description('Show available rule templates')
+    .action(async () => {
+        const { rulesCommand } = await import('./commands/rules.js');
+        await rulesCommand('templates', [], {});
+    });
+
 // Add universal sync command
 program
     .command('sync')
