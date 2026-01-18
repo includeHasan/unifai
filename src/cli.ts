@@ -77,6 +77,31 @@ program
         console.log();
     });
 
+// Add init command
+program
+    .command('init')
+    .description('Initialize skills with smart project detection')
+    .option('-y, --yes', 'Skip confirmation prompts')
+    .option('-s, --source <source>', 'Custom skill source (default: includeHasan/agents-skill)')
+    .option('-a, --agent <agents...>', 'Specify agents to install to')
+    .option('-g, --global', 'Install globally')
+    .action(async (options) => {
+        const { initCommand } = await import('./commands/init.js');
+        await initCommand(options);
+    });
+
+// Add tui command
+program
+    .command('tui')
+    .alias('ui')
+    .description('Interactive TUI for managing skills')
+    .option('-s, --source <source>', 'Custom skill source')
+    .option('-g, --global', 'Manage global skills')
+    .action(async (options) => {
+        const { tuiCommand } = await import('./commands/tui.js');
+        await tuiCommand(options);
+    });
+
 program.parse();
 
 async function main(source: string, options: Options) {
