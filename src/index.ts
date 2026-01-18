@@ -7,7 +7,7 @@
 export { installSkills, InstallOptions } from './commands/install.js';
 export { listSkills, ListOptions } from './commands/list.js';
 export { removeSkills, RemoveOptions } from './commands/remove.js';
-export { initAgents, InitOptions } from './commands/init.js';
+export { initCommand, type InitOptions } from './commands/init.js';
 export {
   getAllSkills,
   getSkill,

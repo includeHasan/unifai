@@ -191,3 +191,20 @@ export function getInstallPath(
 
     return installPath;
 }
+
+/**
+ * Uninstall a skill by removing its directory
+ */
+export async function uninstallSkill(skillPath: string): Promise<{ success: boolean; error?: string }> {
+    const { rm } = await import('fs/promises');
+    
+    try {
+        await rm(skillPath, { recursive: true, force: true });
+        return { success: true };
+    } catch (error) {
+        return {
+            success: false,
+            error: error instanceof Error ? error.message : 'Unknown error',
+        };
+    }
+}
