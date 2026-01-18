@@ -1,0 +1,362 @@
+# Universal Vibecoder CLI - Configuration Tool
+
+Transform the `openskill-ai` CLI into a comprehensive **universal vibecoder configuration tool** that manages AI agent configurations across all major AI IDEs.
+
+## Overview
+
+**Current State:** Skills installer for AI agents  
+**Target State:** Universal configuration manager for:
+- **AGENT.md** - Universal agent instructions (cross-IDE compatible)
+- **RULES** - IDE-specific rule configurations
+- **SKILLS** - Reusable skill modules
+- **MCP** - Model Context Protocol server setup
+
+## Supported AI IDEs Configuration Matrix
+
+| IDE | Agent File | Rules File | Skills Dir | MCP Config |
+|-----|------------|------------|------------|------------|
+| **Claude Code** | `CLAUDE.md` | `.claude/settings.json` | `.claude/skills/` | `.claude/mcp.json` |
+| **Cursor** | `AGENTS.md` | `.cursor/rules/*.mdc` | `.cursor/skills/` | `~/.cursor/mcp.json` |
+| **OpenCode** | `AGENTS.md` | `.opencode.json` | `.opencode/skill/` | `.opencode/mcp.json` |
+| **VS Code Copilot** | `.github/copilot-instructions.md` | `.github/instructions/*.md` | `.github/skills/` | N/A |
+| **Windsurf** | `AGENTS.md` | `.windsurfrules` | `.windsurf/skills/` | `~/.codeium/windsurf/mcp.json` |
+| **Codex** | `AGENTS.md` | `.codex/rules.md` | `.codex/skills/` | `.codex/mcp.json` |
+| **Antigravity** | `AGENTS.md` | `.agent/rules/` | `.agent/skills/` | `~/.gemini/antigravity/mcp.json` |
+| **Gemini CLI** | `AGENTS.md` | `.gemini/rules/` | `.gemini/skills/` | `~/.gemini/settings.json` |
+
+---
+
+## Proposed CLI Commands
+
+### Core Commands
+
+```bash
+# Initialize project with AI config detection
+vibecoder init
+
+# Generate/manage AGENT.md (universal + IDE-specific)
+vibecoder agent init             # Create AGENT.md with wizard
+vibecoder agent sync             # Sync AGENT.md to all IDEs
+vibecoder agent show             # Display current config
+
+# Manage rules
+vibecoder rules init             # Create rules configuration
+vibecoder rules add <rule>       # Add a rule
+vibecoder rules sync             # Sync rules across IDEs
+
+# Manage skills (existing functionality)
+vibecoder skills install <source>
+vibecoder skills list
+vibecoder skills remove <skill>
+
+# Manage MCP servers
+vibecoder mcp init               # Initialize MCP config
+vibecoder mcp add <server>       # Add MCP server
+vibecoder mcp list               # List configured servers
+vibecoder mcp sync               # Sync MCP to all IDEs
+
+# Universal sync
+vibecoder sync                   # Sync all configs to detected IDEs
+```
+
+---
+
+## Architecture
+
+```mermaid
+graph TD
+    A[vibecoder CLI] --> B[Config Manager]
+    B --> C[Agent Manager]
+    B --> D[Rules Manager]
+    B --> E[Skills Manager]
+    B --> F[MCP Manager]
+    
+    C --> G[AGENT.md Parser]
+    C --> H[IDE Adapters]
+    
+    H --> I[Claude Adapter]
+    H --> J[Cursor Adapter]
+    H --> K[Copilot Adapter]
+    H --> L[Windsurf Adapter]
+    H --> M[Other Adapters...]
+    
+    F --> N[MCP Server Registry]
+    F --> O[MCP Config Generator]
+```
+
+---
+
+## Proposed Changes
+
+### New Types & Interfaces
+
+#### [NEW] [src/types/config.ts](file:///c:/Users/hasan/Downloads/agents-skill/src/types/config.ts)
+
+```typescript
+export interface IDEConfig {
+  id: string;
+  name: string;
+  agentFile: string;           // Path to agent instructions file
+  rulesPath: string;           // Path to rules config
+  skillsDir: string;           // Skills directory
+  mcpConfig?: string;          // MCP config location
+  globalMcpConfig?: string;    // Global MCP config
+}
+
+export interface AgentConfig {
+  projectName?: string;
+  description?: string;
+  techStack: string[];
+  buildCommands: string[];
+  testCommands: string[];
+  guidelines: string[];
+  mcpServers?: MCPServer[];
+}
+
+export interface MCPServer {
+  name: string;
+  command: string;
+  args?: string[];
+  env?: Record<string, string>;
+}
+
+export interface RuleSet {
+  global: string[];
+  projectSpecific: string[];
+  patterns?: Record<string, string[]>; // glob -> rules
+}
+```
+
+---
+
+### IDE Adapters
+
+#### [NEW] [src/adapters/base.ts](file:///c:/Users/hasan/Downloads/agents-skill/src/adapters/base.ts)
+
+Base adapter interface for all IDE integrations.
+
+#### [NEW] [src/adapters/claude.ts](file:///c:/Users/hasan/Downloads/agents-skill/src/adapters/claude.ts)
+
+Claude Code adapter - generates `CLAUDE.md` and `.claude/mcp.json`.
+
+#### [NEW] [src/adapters/cursor.ts](file:///c:/Users/hasan/Downloads/agents-skill/src/adapters/cursor.ts)
+
+Cursor adapter - generates `.cursor/rules/*.mdc` files.
+
+#### [NEW] [src/adapters/copilot.ts](file:///c:/Users/hasan/Downloads/agents-skill/src/adapters/copilot.ts)
+
+GitHub Copilot adapter - generates `.github/copilot-instructions.md`.
+
+#### [NEW] [src/adapters/windsurf.ts](file:///c:/Users/hasan/Downloads/agents-skill/src/adapters/windsurf.ts)
+
+Windsurf adapter - generates `.windsurfrules`.
+
+#### [NEW] [src/adapters/opencode.ts](file:///c:/Users/hasan/Downloads/agents-skill/src/adapters/opencode.ts)
+
+OpenCode adapter - manages `.opencode.json` configuration.
+
+---
+
+### New Commands
+
+#### [NEW] [src/commands/agent.ts](file:///c:/Users/hasan/Downloads/agents-skill/src/commands/agent.ts)
+
+Manage AGENT.md files with interactive wizard.
+
+#### [NEW] [src/commands/rules.ts](file:///c:/Users/hasan/Downloads/agents-skill/src/commands/rules.ts)
+
+Manage rules configuration across IDEs.
+
+#### [NEW] [src/commands/mcp.ts](file:///c:/Users/hasan/Downloads/agents-skill/src/commands/mcp.ts)
+
+Manage MCP server configuration.
+
+#### [NEW] [src/commands/sync.ts](file:///c:/Users/hasan/Downloads/agents-skill/src/commands/sync.ts)
+
+Sync all configurations to detected IDEs.
+
+---
+
+### Core Managers
+
+#### [NEW] [src/managers/agent-manager.ts](file:///c:/Users/hasan/Downloads/agents-skill/src/managers/agent-manager.ts)
+
+```typescript
+export class AgentManager {
+  // Parse existing AGENT.md
+  async parse(path: string): Promise<AgentConfig>;
+  
+  // Generate AGENT.md content
+  async generate(config: AgentConfig): Promise<string>;
+  
+  // Sync to specific IDE
+  async syncToIDE(config: AgentConfig, ide: string): Promise<void>;
+  
+  // Interactive wizard
+  async wizard(): Promise<AgentConfig>;
+}
+```
+
+#### [NEW] [src/managers/mcp-manager.ts](file:///c:/Users/hasan/Downloads/agents-skill/src/managers/mcp-manager.ts)
+
+```typescript
+export class MCPManager {
+  // List popular MCP servers
+  async listAvailable(): Promise<MCPServer[]>;
+  
+  // Add server to config
+  async addServer(server: MCPServer): Promise<void>;
+  
+  // Generate IDE-specific MCP config
+  async generateConfig(ide: string): Promise<string>;
+  
+  // Sync to IDE
+  async syncToIDE(ide: string): Promise<void>;
+}
+```
+
+---
+
+### MCP Server Registry
+
+#### [NEW] [src/data/mcp-servers.ts](file:///c:/Users/hasan/Downloads/agents-skill/src/data/mcp-servers.ts)
+
+Pre-configured popular MCP servers:
+
+```typescript
+export const mcpServers = {
+  'filesystem': {
+    name: '@anthropic/mcp-server-filesystem',
+    command: 'npx',
+    args: ['-y', '@anthropic/mcp-server-filesystem', '.'],
+  },
+  'github': {
+    name: '@anthropic/mcp-server-github',
+    command: 'npx',
+    args: ['-y', '@anthropic/mcp-server-github'],
+    env: { GITHUB_TOKEN: '${GITHUB_TOKEN}' },
+  },
+  'brave-search': {
+    name: '@anthropic/mcp-server-brave-search',
+    command: 'npx',
+    args: ['-y', '@anthropic/mcp-server-brave-search'],
+    env: { BRAVE_API_KEY: '${BRAVE_API_KEY}' },
+  },
+  // ... more servers
+};
+```
+
+---
+
+### Modified Files
+
+#### [MODIFY] [src/cli.ts](file:///c:/Users/hasan/Downloads/agents-skill/src/cli.ts)
+
+- Rename CLI to `vibecoder`
+- Add new subcommands: `agent`, `rules`, `mcp`, `sync`
+- Keep existing `skills` functionality
+
+#### [MODIFY] [package.json](file:///c:/Users/hasan/Downloads/agents-skill/package.json)
+
+- Update name to `vibecoder`
+- Update bin entry
+- Add new dependencies (if needed)
+
+#### [MODIFY] [src/utils/agents.ts](file:///c:/Users/hasan/Downloads/agents-skill/src/utils/agents.ts)
+
+- Extend [AgentConfig](file:///c:/Users/hasan/Downloads/agents-skill/src/types.ts#29-36) interface with new properties
+- Add IDE-specific configuration paths
+
+---
+
+## File Structure
+
+```
+src/
+├── cli.ts                    # Main CLI entry
+├── types/
+│   ├── index.ts
+│   └── config.ts             # New config types
+├── adapters/
+│   ├── base.ts               # Base adapter interface
+│   ├── claude.ts
+│   ├── cursor.ts
+│   ├── copilot.ts
+│   ├── windsurf.ts
+│   ├── opencode.ts
+│   └── index.ts              # Adapter registry
+├── managers/
+│   ├── agent-manager.ts
+│   ├── rules-manager.ts
+│   ├── mcp-manager.ts
+│   └── config-manager.ts
+├── commands/
+│   ├── init.ts               # Existing
+│   ├── agent.ts              # New
+│   ├── rules.ts              # New
+│   ├── mcp.ts                # New
+│   ├── sync.ts               # New
+│   └── tui.ts                # Existing
+├── data/
+│   ├── mcp-servers.ts        # MCP server registry
+│   └── templates/            # Config templates
+└── utils/
+    ├── agents.ts             # Modified
+    ├── skills.ts
+    └── ...
+```
+
+---
+
+## Implementation Phases
+
+### Phase 1: Foundation (Current Sprint)
+- [ ] Create types and interfaces
+- [ ] Build base adapter system
+- [ ] Implement Claude and Cursor adapters
+- [ ] Add `agent init` command
+
+### Phase 2: MCP Integration
+- [ ] Create MCP server registry
+- [ ] Implement `mcp` command
+- [ ] Add MCP sync for Claude and Cursor
+
+### Phase 3: Rules System
+- [ ] Implement rules manager
+- [ ] Add `rules` command
+- [ ] Support `.cursorrules` and `CLAUDE.md` rules sections
+
+### Phase 4: Full IDE Support
+- [ ] Add remaining IDE adapters (Copilot, Windsurf, etc.)
+- [ ] Implement universal `sync` command
+- [ ] Add conflict resolution
+
+### Phase 5: Polish
+- [ ] Interactive TUI for all features
+- [ ] Template system for common setups
+- [ ] Documentation and examples
+
+---
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Package Rename**: Should we rename from `openskill-ai` to `vibecoder`? This would be a breaking change for existing users.
+
+> [!NOTE]
+> **MCP Scope**: MCP configuration varies significantly between IDEs. Some (like VS Code Copilot) don't support MCP yet. Should we focus on Claude/Cursor first?
+
+---
+
+## Verification Plan
+
+### Automated Tests
+1. Unit tests for each adapter
+2. Integration tests for config generation
+3. CLI command tests
+
+### Manual Verification
+1. Test `vibecoder init` on various project types
+2. Verify generated configs work in Claude, Cursor, Copilot
+3. Test MCP server configuration and connectivity
+4. Test sync across multiple IDEs

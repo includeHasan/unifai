@@ -1,230 +1,105 @@
 # openskill-ai
 
-> Install AI agent skills from any Git repository
+> Universal AI IDE Configuration & Skill Manager
 
-A powerful CLI tool to install and manage AI coding agent skills from GitHub, GitLab, or any Git repository. Supports 15+ popular AI agents with auto-detection and interactive prompts.
+A powerful CLI tool to unify your AI coding agent experience. Standardize instructions, manage MCP servers, and install agent skills across Claude Code, Antigravity, Cursor, OpenCode, and GitHub Copilot.
 
-## Features
+## 🚀 Key Features
 
-✨ **Remote Repository Support** - Install skills from any Git repository  
-🤖 **15+ AI Agents** - Antigravity, Cursor, Claude Code, OpenCode, GitHub Copilot, and more  
-💬 **Interactive CLI** - Beautiful prompts with multi-select workflows  
-🔍 **Auto-Detection** - Automatically finds installed agents on your system  
-🌐 **Global/Project Installs** - Choose your installation scope  
-🔒 **Security** - Path sanitization and traversal protection  
+- 🔄 **Universal Sync** - Synchronize agent instructions and MCP configs across all IDEs at once.
+- 🛠️ **MCP Management** - Add, list, and sync Model Context Protocol servers (Standard Stdio & HTTP/SSE).
+- 🤖 **Standardized Agents** - Project-level `AGENTS.md` and `CLAUDE.md` with default prompt templates.
+- ✨ **Skill Manager** - Install specialized agent instructions from any Git repository.
+- 📐 **Global & Workspace Rules** - Manage rules centrally (e.g., `~/.gemini/GEMINI.md`) or per project.
+- � **Auto-Detection** - Automatically detects installed AI assistants on your system.
 
-## Quick Start
+## 🛠️ Installation
 
 ```bash
-# Install skills from a repository
-npx openskill-ai vercel-labs/agent-skills
-
-# List available skills first
-npx openskill-ai vercel-labs/agent-skills --list
-
-# Install specific skill to Antigravity
-npx openskill-ai vercel-labs/agent-skills \
-  --skill frontend-design \
-  --agent antigravity
-```
-
-## Installation
-
-### As a CLI Tool (Recommended)
-
-Use with `npx` without installing:
-```bash
-npx openskill-ai <source>
-```
-
-Or install globally:
-```bash
+# Install globally
 npm install -g openskill-ai
-openskill-ai <source>
+
+# Or use with npx
+npx openskill-ai <command>
 ```
 
-### As a Library
+## 📋 Quick Start
 
+### 1. Unified Configuration Sync
+Detected an AI IDE? Sync your setup across all of them in one go:
 ```bash
-npm install openskill-ai
+# Sync agent files, rules, and MCP configs
+openskill-ai sync
 ```
 
-```javascript
-import { installSkillForAgent, discoverSkills } from 'openskill-ai';
-```
-
-## Usage
-
-### Source Formats
-
-The CLI accepts multiple source formats:
-
+### 2. Manage MCP Servers
+Add local or remote tools to all your AI assistants:
 ```bash
-# GitHub shorthand
+# Choose between Command (stdio) or HTTP server
+openskill-ai mcp add
+
+# Sync your MCP setup to all IDE settings (settings.json, etc.)
+openskill-ai mcp sync
+
+# List all configured servers
+openskill-ai mcp list
+```
+
+### 3. Agent Instructions
+Initialize a standardized instruction set for your project:
+```bash
+# Creates AGENTS.md, CLAUDE.md, etc.
+openskill-ai agent init
+```
+
+### 4. Install Agent Skills
+Install specialized behaviors from the community or your own repos:
+```bash
+# Install skills from a GitHub repository
 openskill-ai vercel-labs/agent-skills
 
-# GitHub URL
-openskill-ai https://github.com/owner/repo
-
-# GitHub tree path (specific directory)
-openskill-ai https://github.com/owner/repo/tree/main/skills/frontend
-
-# GitLab
-openskill-ai https://gitlab.com/owner/repo
-
-# Direct Git URL
-openskill-ai git@github.com:owner/repo.git
-```
-
-### CLI Options
-
-| Option | Description |
-|--------|-------------|
-| `-g, --global` | Install globally (user-level) instead of project-level |
-| `-a, --agent <agents...>` | Target specific agents |
-| `-s, --skill <skills...>` | Select specific skills to install |
-| `-l, --list` | List available skills without installing |
-| `-y, --yes` | Skip all confirmation prompts |
-| `-h, --help` | Show help |
-
-### Examples
-
-**Interactive Installation** (recommended for first-time users):
-```bash
-openskill-ai vercel-labs/agent-skills
-```
-
-**List Skills Before Installing:**
-```bash
-openskill-ai vercel-labs/agent-skills --list
-```
-
-**Install Specific Skill:**
-```bash
+# Choose specific skills to install
 openskill-ai vercel-labs/agent-skills --skill frontend-design
 ```
 
-**Install to Multiple Agents:**
-```bash
-openskill-ai vercel-labs/agent-skills \
-  --skill frontend-design \
-  --agent antigravity \
-  --agent cursor \
-  --agent claude-code
-```
+## 🤖 Supported Adapters
 
-**Global Installation (Non-Interactive):**
-```bash
-openskill-ai vercel-labs/agent-skills \
-  --skill frontend-design \
-  --global \
-  --yes
-```
+| Adapter | Workspace File | Global File | MCP Config |
+|---------|----------------|-------------|------------|
+| **Antigravity** | `AGENTS.md` | `~/.gemini/GEMINI.md` | `.gemini/settings.json` |
+| **Claude Code** | `CLAUDE.md` | `~/.claude.md` | `.claude/mcp.json` |
+| **OpenCode** | `AGENTS.md` | `~/.opencode.md` | `mcp.json` |
+| **Cursor** | `AGENTS.md` | `~/.cursorrules` | `.cursor/mcp.json` |
+| **GitHub Copilot** | `.github/copilot-instructions.md` | - | - |
 
-**List All Supported Agents:**
-```bash
-openskill-ai list-agents
-```
+## 🕹️ Command Reference
 
-## Supported AI Agents
+| Command | Description |
+|---------|-------------|
+| `sync` | Sync all configs across all detected IDEs |
+| `mcp add` | Add a new MCP server (Stdio or HTTP) |
+| `mcp sync` | Sync MCP servers to all assistant configs |
+| `agent init` | Initialize agent instruction files in the current folder |
+| `agent show` | Show current agent configuration |
+| `<git-url>` | Install/manage skills from a remote repository |
 
-The tool supports 15 AI coding agents with auto-detection:
+## 🏗️ Folder Structure
 
-- **Antigravity** - `.agent/skills` (project) or `~/.gemini/antigravity/skills` (global)
-- **Cursor** - `.cursor/skills` or `~/.cursor/skills`
-- **Claude Code** - `.claude/skills` or `~/.claude/skills`
-- **OpenCode** - `.opencode/skill` or `~/.config/opencode/skill`
-- **GitHub Copilot** - `.github/skills` or `~/.copilot/skills`
-- **Codex** - `.codex/skills` or `~/.codex/skills`
-- **Windsurf** - `.windsurf/skills` or `~/.codeium/windsurf/skills`
-- **Roo Code** - `.roo/skills` or `~/.roo/skills`
-- **Goose** - `.goose/skills` or `~/.config/goose/skills`
-- **Gemini CLI** - `.gemini/skills` or `~/.gemini/skills`
-- **Amp** - `.agents/skills` or `~/.config/agents/skills`
-- **Kilo Code** - `.kilocode/skills` or `~/.kilocode/skills`
-- **Clawdbot** - `skills/` or `~/.clawdbot/skills`
-- **Droid** - `.factory/skills` or `~/.factory/skills`
+Universal AI IDEs follow these conventions through `openskill-ai`:
 
-## Creating Skills
+- **Workspace Rules**: `.agent/rules/` (Markdown files)
+- **Agent Skills**: `.agent/skills/`
+- **Global Config**: `~/.gemini/` (Settings, rules, and global instructions)
 
-Skills are defined using `SKILL.md` files with YAML frontmatter:
+## 🔒 Security
 
-```markdown
----
-name: my-skill
-description: What this skill does and when to use it
----
+The tool implements strict path sanitization and traversal protection to ensure that skills downloaded from remote repositories cannot execute malicious path operations on your system.
 
-# My Skill
-
-Instructions for the AI agent to follow when this skill is activated.
-
-## When to Use
-
-Describe scenarios where this skill should be applied.
-
-## Guidelines
-
-1. First guideline
-2. Second guideline
-```
-
-### Skill Discovery
-
-The CLI searches for skills in these locations:
-- Root directory (if it contains `SKILL.md`)
-- `skills/`, `skills/.curated/`, `skills/.experimental/`
-- `.agent/skills/`, `.claude/skills/`, `.cursor/skills/`
-- All other agent-specific directories
-- Recursive search as fallback (max depth 5)
-
-## Security
-
-The tool implements several security measures:
-
-- **Path Sanitization** - Removes dangerous characters from skill names
-- **Traversal Protection** - Validates all paths to prevent directory traversal
-- **Safe Cloning** - Uses temporary directories for Git operations
-- **File Exclusions** - Skips `README.md`, `metadata.json`, and files starting with `_`
-
-## Programmatic API
-
-```javascript
-import { 
-  installSkillForAgent,
-  discoverSkills,
-  detectInstalledAgents,
-  parseSource,
-  cloneRepo
-} from 'openskill-ai';
-
-// Clone and discover skills
-const parsed = parseSource('vercel-labs/agent-skills');
-const tempDir = await cloneRepo(parsed.url);
-const skills = await discoverSkills(tempDir);
-
-// Detect installed agents
-const agents = await detectInstalledAgents();
-
-// Install skill
-await installSkillForAgent(skills[0], 'antigravity', { global: false });
-```
-
-## Requirements
-
-- Node.js >= 18.0.0
-- Git installed on your system
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
+## 📄 License
 
 MIT © Agent Skills Community
 
-## Links
+## 🔗 Links
 
-- [GitHub Repository](https://github.com/yourusername/agent-skills)
-- [Report Issues](https://github.com/yourusername/agent-skills/issues)
+- [GitHub Repository](https://github.com/includeHasan/agent-skills)
 - [npm Package](https://www.npmjs.com/package/openskill-ai)
