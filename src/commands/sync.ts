@@ -99,6 +99,51 @@ export async function syncCommand(options: SyncCommandOptions): Promise<void> {
         }
     }
 
+    // Try to find Rules
+    let ruleSet: RuleSet = { global: [], pathSpecific: [] };
+    const ruleSources = [
+        '.agent/rules',
+        '.claude/rules',
+        '.cursor/rules',
+        '.gemini/rules'
+    ];
+
+    for (const source of ruleSources) {
+        const path = join(cwd, source);
+        if (existsSync(path)) {
+            try {
+                const { readdir, readFile } = await import('fs/promises');
+                const files = await readdir(path);
+                for (const file of files) {
+                    if (file.endsWith('.md')) {
+                        const content = await readFile(join(path, file), 'utf-8');
+                        if (file === 'global.md') {
+                            ruleSet.global.push({ content });
+                        } else {
+                            // Assume filename is the pattern or just a name
+                            const pattern = file.replace('.md', '');
+                            ruleSet.pathSpecific.push({
+                                pattern: pattern === 'rules' ? '*' : pattern,
+                                rules: [{ content }]
+                            });
+                        }
+                    }
+                }
+            } catch {
+                // Ignore errors
+            }
+        }
+    }
+
+    // Special case for .cursorrules
+    const cursorRulesPath = join(cwd, '.cursorrules');
+    if (existsSync(cursorRulesPath)) {
+        try {
+            const content = await readFile(cursorRulesPath, 'utf-8');
+            ruleSet.global.push({ content });
+        } catch { }
+    }
+
     spinner.stop('Configurations loaded');
 
     // Summary of what we found
@@ -106,6 +151,7 @@ export async function syncCommand(options: SyncCommandOptions): Promise<void> {
     p.log.step(chalk.bold('Found:'));
     p.log.message(`  Agent config: ${agentConfig ? chalk.green('Yes') : chalk.yellow('No')}`);
     p.log.message(`  MCP servers: ${mcpServers.length > 0 ? chalk.green(mcpServers.length.toString()) : chalk.yellow('0')}`);
+    p.log.message(`  Rules discovered: ${ruleSet.global.length + ruleSet.pathSpecific.length > 0 ? chalk.green('Yes') : chalk.yellow('No')}`);
     console.log();
 
     if (!agentConfig && mcpServers.length === 0) {
@@ -148,28 +194,35 @@ export async function syncCommand(options: SyncCommandOptions): Promise<void> {
         };
 
         try {
-            // Sync agent config
-            if (syncAgent && agentConfig) {
-                const syncResult = await adapter.sync(cwd, agentConfig, undefined, { global: options.global });
-                result.agentSuccess = syncResult.success;
-                result.files.push(...syncResult.filesCreated, ...syncResult.filesUpdated);
-                result.errors.push(...syncResult.errors);
+            // Prepare config with discovered MCP servers
+            const syncConfig: AgentConfig = agentConfig || {
+                projectName: undefined,
+                description: undefined,
+                languages: [],
+                frameworks: [],
+                techStack: [],
+                devCommands: [],
+                buildCommands: [],
+                testCommands: [],
+                codingGuidelines: [],
+                architectureNotes: [],
+                mcpServers: [],
+            };
+
+            if (syncMcp && mcpServers.length > 0) {
+                syncConfig.mcpServers = mcpServers as any;
             }
 
-            // Sync MCP config
-            if (syncMcp && mcpServers.length > 0) {
-                const mcpContent = await adapter.generateMCPConfig(mcpServers);
-                const mcpPath = adapter.getMCPConfigPath(cwd, options.global);
+            // Sync everything via adapter
+            if (syncAgent || syncRules || syncMcp) {
+                const syncResult = await adapter.sync(cwd, syncConfig, syncRules ? ruleSet : undefined, {
+                    global: options.global
+                });
 
-                if (mcpPath && mcpContent !== '{}') {
-                    const { mkdir, writeFile } = await import('fs/promises');
-                    const { dirname } = await import('path');
-
-                    await mkdir(dirname(mcpPath), { recursive: true });
-                    await writeFile(mcpPath, mcpContent);
-                    result.mcpSuccess = true;
-                    result.files.push(mcpPath);
-                }
+                result.agentSuccess = syncResult.success;
+                result.mcpSuccess = syncMcp && mcpServers.length > 0;
+                result.files.push(...syncResult.filesCreated, ...syncResult.filesUpdated);
+                result.errors.push(...syncResult.errors);
             }
         } catch (error) {
             result.errors.push(error instanceof Error ? error.message : 'Unknown error');
