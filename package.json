@@ -15,11 +15,18 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsup src/cli.ts src/index.ts --format esm --dts --clean",
-    "watch": "tsup src/cli.ts src/index.ts --format esm --dts --watch",
-    "dev": "tsx src/cli.ts",
-    "test": "node dist/cli.js list-agents",
-    "prepublishOnly": "npm run build"
+    "build": "bun run build.ts",
+    "build:standalone": "bun build src/cli.ts --compile --outfile dist/openskill-ai",
+    "build:standalone:all": "bun run build:standalone:windows && bun run build:standalone:linux && bun run build:standalone:macos",
+    "build:standalone:windows": "bun build src/cli.ts --compile --target=bun-windows-x64 --outfile dist/bin/openskill-ai-windows-x64.exe",
+    "build:standalone:linux": "bun build src/cli.ts --compile --target=bun-linux-x64 --outfile dist/bin/openskill-ai-linux-x64",
+    "build:standalone:macos": "bun build src/cli.ts --compile --target=bun-darwin-x64 --outfile dist/bin/openskill-ai-darwin-x64",
+    "dev": "bun src/cli.ts",
+    "dev:watch": "bun --watch src/cli.ts",
+    "test": "bun run dist/cli.js list-agents",
+    "test:dev": "bun src/cli.ts list-agents",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "bun run build"
   },
   "keywords": [
     "ai",
@@ -39,7 +46,8 @@
     "coding-assistant",
     "best-practices",
     "git",
-    "cli"
+    "cli",
+    "bun"
   ],
   "author": "Agent Skills Community",
   "license": "MIT",
@@ -59,12 +67,12 @@
     "simple-git": "^3.27.0"
   },
   "devDependencies": {
+    "@types/bun": "^1.1.0",
     "@types/node": "^22.10.0",
-    "tsup": "^8.3.5",
-    "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18.0.0",
+    "bun": ">=1.0.0"
   }
 }

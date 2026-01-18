@@ -1,0 +1,12 @@
+# Bun Configuration
+# https://bun.sh/docs/runtime/bunfig
+
+[install]
+# Use exact versions for reproducibility
+exact = true
+
+[run]
+# Silent mode for cleaner output
+silent = false
+
+# TypeScript configuration (Bun uses tsconfig.json by default)

@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 
 import { program } from 'commander';
 import * as p from '@clack/prompts';
@@ -8,17 +8,34 @@ import { discoverSkills, getSkillDisplayName } from './utils/skills.js';
 import { installSkillForAgent, isSkillInstalled, getInstallPath } from './utils/installer.js';
 import { detectInstalledAgents, agents } from './utils/agents.js';
 import type { Skill, AgentType } from './types.js';
-import { readFile } from 'fs/promises';
+import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// Cross-runtime __dirname support
+const __dirname = typeof import.meta.dir === 'string'
+    ? import.meta.dir
+    : dirname(fileURLToPath(import.meta.url));
 
-// Read version from package.json
-const packageJsonPath = join(__dirname, '../package.json');
-const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf-8'));
-const version = packageJson.version;
+// Read version from package.json with cross-runtime support
+// Fallback version for standalone binaries where package.json may not be accessible
+const FALLBACK_VERSION = '1.0.1';
+let version: string = FALLBACK_VERSION;
+
+try {
+    const packageJsonPath = join(__dirname, '../package.json');
+    if (typeof Bun !== 'undefined') {
+        // Bun runtime - use Bun.file for better performance
+        const packageJson = await Bun.file(packageJsonPath).json();
+        version = packageJson.version;
+    } else {
+        // Node.js runtime fallback
+        const { readFile } = await import('fs/promises');
+        const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf-8'));
+        version = packageJson.version;
+    }
+} catch {
+    // Use fallback version (standalone binary or missing package.json)
+}
 
 interface Options {
     global?: boolean;

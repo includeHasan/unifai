@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0",
+  "author": "Agent Skills Community",
+  "date": "January 2026",
+  "abstract": "backend best practices in skills",
+  "references": [
+    "https://claude.ai/docs/skills",
+    "https://github.com/vercel-labs/agent-skills",
+    "https://docs.anthropic.com"
+  ],
+  "compatibility": [
+    "Claude Code",
+    "OpenCode",
+    "Cursor",
+    "Other MCP-compatible agents"
+  ]
+}
