@@ -6,7 +6,8 @@
  */
 
 import type { AgentConfig, MCPServer, RuleSet, SyncResult, IDEConfig } from '../types/config.js';
-import type { AgentType } from '../types/index.js';
+import type { AgentType, Skill } from '../types/index.js';
+import { basename } from 'path';
 
 /**
  * Abstract base class for IDE adapters
@@ -53,13 +54,23 @@ export abstract class BaseAdapter {
     abstract getMCPConfigPath(projectPath: string, global?: boolean): string;
 
     /**
+     * Get the path where skills should be written
+     */
+    getSkillsPath(projectPath: string, global?: boolean): string {
+        if (global) {
+            return this.config.globalSkillsDir;
+        }
+        return `${projectPath}/${this.config.skillsDir}`;
+    }
+
+    /**
      * Sync all configurations to this IDE
      */
     async sync(
         projectPath: string,
         config: AgentConfig,
         rules?: RuleSet,
-        options?: { global?: boolean }
+        options?: { global?: boolean, skills?: Skill[] }
     ): Promise<SyncResult> {
         const result: SyncResult = {
             ide: this.id,
@@ -96,6 +107,22 @@ export abstract class BaseAdapter {
                 const mcpPath = this.getMCPConfigPath(projectPath, options?.global);
                 if (mcpPath) {
                     await this.writeFile(mcpPath, mcpContent, result);
+                }
+            }
+
+            // Sync skills if provided
+            if (options?.skills && options.skills.length > 0) {
+                const { cp } = await import('fs/promises');
+                const skillsPath = this.getSkillsPath(projectPath, options.global);
+
+                for (const skill of options.skills) {
+                    const skillDest = `${skillsPath}/${basename(skill.path)}`;
+                    try {
+                        await cp(skill.path, skillDest, { recursive: true, force: true });
+                        result.filesCreated.push(skillDest);
+                    } catch (error) {
+                        result.errors.push(`Failed to copy skill ${skill.name}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+                    }
                 }
             }
         } catch (error) {

@@ -58,16 +58,17 @@ The `sync` command "scavenges" configurations from these locations and migrates 
 | **Instructions** | `AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md` |
 | **Rules** | `.agent/rules/`, `.claude/rules/`, `.cursor/rules/`, `.gemini/rules/`, `.cursorrules` |
 | **MCP** | `.mcp/mcp.json`, `.claude/mcp.json`, `.cursor/mcp.json` |
+| **Skills** | `skills/`, `.agent/skills/`, `.claude/skills/`, `.cursor/skills/`, `.github/skills/` |
 
 ## 🤖 Supported Adapters
 
-| Adapter | Workspace File | Global File | MCP Config |
-|---------|----------------|-------------|------------|
-| **Antigravity** | `AGENTS.md` | `~/.gemini/GEMINI.md` | `.gemini/settings.json` |
-| **Claude Code** | `CLAUDE.md` | `~/.claude.md` | `.claude/mcp.json` |
-| **OpenCode** | `AGENTS.md` | `~/.opencode.md` | `mcp.json` |
-| **Cursor** | `AGENTS.md` | `~/.cursorrules` | `.cursor/mcp.json` |
-| **GitHub Copilot** | `.github/copilot-instructions.md` | - | - |
+| Adapter | Workspace File | Global File | MCP Config | Skills |
+|---------|----------------|-------------|------------|--------|
+| **Antigravity** | `AGENTS.md` | `~/.gemini/GEMINI.md` | `.gemini/settings.json` | `.agent/skills` |
+| **Claude Code** | `CLAUDE.md` | `~/.claude.md` | `.claude/mcp.json` | `.claude/skills` |
+| **OpenCode** | `AGENTS.md` | `~/.opencode.md` | `mcp.json` | `.opencode/skill` |
+| **Cursor** | `AGENTS.md` | `~/.cursorrules` | `.cursor/mcp.json` | `.cursor/skills` |
+| **GitHub Copilot** | `.github/copilot-instructions.md` | - | - | `.github/skills` |
 
 ## 🕹️ Command Reference
 

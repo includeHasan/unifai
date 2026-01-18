@@ -9,15 +9,18 @@ import * as p from '@clack/prompts';
 import chalk from 'chalk';
 import { existsSync } from 'fs';
 import { readFile } from 'fs/promises';
-import { join } from 'path';
+import { join, dirname } from 'path';
 import { getInstalledAdapters, getAllAdapters } from '../adapters/index.js';
 import type { AgentConfig, RuleSet } from '../types/config.js';
+import { discoverSkills } from '../utils/skills.js';
+import type { Skill } from '../types/index.js';
 
 export interface SyncCommandOptions {
     global?: boolean;
     agent?: boolean;
     rules?: boolean;
     mcp?: boolean;
+    skills?: boolean;
     ide?: string[];
 }
 
@@ -35,6 +38,7 @@ export async function syncCommand(options: SyncCommandOptions): Promise<void> {
     const syncAgent = options.agent ?? true;
     const syncRules = options.rules ?? true;
     const syncMcp = options.mcp ?? true;
+    const syncSkills = options.skills ?? true;
 
     // Load configurations
     spinner.start('Loading configurations...');
@@ -139,9 +143,17 @@ export async function syncCommand(options: SyncCommandOptions): Promise<void> {
     const cursorRulesPath = join(cwd, '.cursorrules');
     if (existsSync(cursorRulesPath)) {
         try {
-            const content = await readFile(cursorRulesPath, 'utf-8');
-            ruleSet.global.push({ content });
         } catch { }
+    }
+
+    // Try to find Skills
+    let skills: Skill[] = [];
+    if (syncSkills) {
+        try {
+            skills = await discoverSkills(cwd);
+        } catch {
+            // Ignore errors
+        }
     }
 
     spinner.stop('Configurations loaded');
@@ -153,9 +165,10 @@ export async function syncCommand(options: SyncCommandOptions): Promise<void> {
     p.log.message(`  Agent config: ${agentConfig ? chalk.green('Yes') : chalk.yellow('No')}`);
     p.log.message(`  MCP servers: ${mcpServers.length > 0 ? chalk.green(mcpServers.length.toString()) : chalk.yellow('0')}`);
     p.log.message(`  Rules discovered: ${hasRules ? chalk.green('Yes') : chalk.yellow('No')}`);
+    p.log.message(`  Skills discovered: ${skills.length > 0 ? chalk.green(skills.length.toString()) : chalk.yellow('0')}`);
     console.log();
 
-    if (!agentConfig && mcpServers.length === 0 && !hasRules) {
+    if (!agentConfig && mcpServers.length === 0 && !hasRules && skills.length === 0) {
         p.log.warn('No configurations found to sync');
         p.log.info('Run `unifai agent init` to create agent config');
         p.log.info('Run `unifai mcp init` to create MCP config');
@@ -215,9 +228,10 @@ export async function syncCommand(options: SyncCommandOptions): Promise<void> {
             }
 
             // Sync everything via adapter
-            if (syncAgent || syncRules || syncMcp) {
+            if (syncAgent || syncRules || syncMcp || syncSkills) {
                 const syncResult = await adapter.sync(cwd, syncConfig, syncRules ? ruleSet : undefined, {
-                    global: options.global
+                    global: options.global,
+                    skills: syncSkills ? skills : undefined
                 });
 
                 result.agentSuccess = syncResult.success;

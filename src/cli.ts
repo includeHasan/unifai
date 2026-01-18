@@ -161,6 +161,7 @@ program
     .option('--agent', 'Only sync agent configuration')
     .option('--mcp', 'Only sync MCP configuration')
     .option('--rules', 'Only sync rules')
+    .option('--skills', 'Only sync skills')
     .action(async (options) => {
         const syncCommand = (await import('./commands/sync.js')).default;
         await syncCommand(options);
