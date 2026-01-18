@@ -119,7 +119,94 @@ program
         await tuiCommand(options);
     });
 
-program.parse();
+// Add agent command group
+const agentCmd = program
+    .command('agent')
+    .description('Manage AGENT.md / agent instructions across IDEs');
+
+agentCmd
+    .command('init')
+    .description('Interactive wizard to create agent configuration')
+    .option('-g, --global', 'Create global configuration')
+    .option('-i, --ide <ides...>', 'Specify IDEs to configure')
+    .option('-y, --yes', 'Skip confirmation prompts')
+    .action(async (options) => {
+        const { agentInit } = await import('./commands/agent.js');
+        await agentInit(options);
+    });
+
+agentCmd
+    .command('show')
+    .description('Display current agent configuration')
+    .option('-g, --global', 'Show global configuration')
+    .action(async (options) => {
+        const { agentShow } = await import('./commands/agent.js');
+        await agentShow(options);
+    });
+
+agentCmd
+    .command('sync')
+    .description('Sync agent config to all detected IDEs')
+    .option('-g, --global', 'Sync global configuration')
+    .action(async (options) => {
+        const { agentSync } = await import('./commands/agent.js');
+        await agentSync(options);
+    });
+
+// Add mcp command group
+const mcpCmd = program
+    .command('mcp')
+    .description('Manage MCP (Model Context Protocol) server configurations');
+
+mcpCmd
+    .command('init')
+    .description('Initialize MCP configuration')
+    .option('-g, --global', 'Create global configuration')
+    .action(async (options) => {
+        const { mcpInit } = await import('./commands/mcp.js');
+        await mcpInit(options);
+    });
+
+mcpCmd
+    .command('add')
+    .description('Add an MCP server')
+    .option('-g, --global', 'Add to global configuration')
+    .option('-y, --yes', 'Skip confirmation prompts')
+    .action(async (options) => {
+        const { mcpAdd } = await import('./commands/mcp.js');
+        await mcpAdd(options);
+    });
+
+mcpCmd
+    .command('list')
+    .description('List configured MCP servers')
+    .option('-g, --global', 'List global configuration')
+    .action(async (options) => {
+        const { mcpList } = await import('./commands/mcp.js');
+        await mcpList(options);
+    });
+
+mcpCmd
+    .command('sync')
+    .description('Sync MCP config to all detected IDEs')
+    .option('-g, --global', 'Sync global configuration')
+    .action(async (options) => {
+        const { mcpSync } = await import('./commands/mcp.js');
+        await mcpSync(options);
+    });
+
+// Add universal sync command
+program
+    .command('sync')
+    .description('Sync all configurations to all detected IDEs')
+    .option('-g, --global', 'Sync global configurations')
+    .option('--agent', 'Only sync agent configuration')
+    .option('--mcp', 'Only sync MCP configuration')
+    .option('--rules', 'Only sync rules')
+    .action(async (options) => {
+        const syncCommand = (await import('./commands/sync.js')).default;
+        await syncCommand(options);
+    });
 
 async function main(source: string, options: Options) {
     console.log();
@@ -394,3 +481,6 @@ async function cleanup(tempDir: string | null) {
         }
     }
 }
+
+// Parse CLI arguments
+program.parse();
